@@ -7,13 +7,13 @@ import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCGwBxlk6cKtRq5XlWmy6toqwYtSgYstW4",
-  authDomain: "voiceofhope-87105.firebaseapp.com",
-  projectId: "voiceofhope-87105",
-  storageBucket: "voiceofhope-87105.firebasestorage.app",
-  messagingSenderId: "558885101040",
-  appId: "1:558885101040:web:14cd9e622658d419a95135",
-  measurementId: "G-NZ6469E0EW"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
