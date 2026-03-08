@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Voice of Hope
 A healthcare feedback and complaint platform.
 
@@ -39,3 +40,6 @@ npm run dev
 
 ## Live Demo
 [Voice of Hope - Live](https://68b24395f002a9e3bfbf6094--voice-of-hope.netlify.app/)
+=======
+link:https://68b24395f002a9e3bfbf6094--voice-of-hope.netlify.app/
+>>>>>>> 541a51696114d8fbf4eb2adfa798981069cace1f

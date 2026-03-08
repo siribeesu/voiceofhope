@@ -2,6 +2,7 @@
 logs
 *.log
 npm-debug.log*
+<<<<<<< HEAD
 
 # Dependencies
 **/node_modules/
@@ -16,12 +17,32 @@ npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+=======
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+>>>>>>> 541a51696114d8fbf4eb2adfa798981069cace1f
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 
 # Firebase
 /backend/serviceAccountKey.json
+=======
+.env
+>>>>>>> 541a51696114d8fbf4eb2adfa798981069cace1f
