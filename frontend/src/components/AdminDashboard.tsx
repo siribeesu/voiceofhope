@@ -25,6 +25,7 @@ import {
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Remove autofill for admin login
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -173,6 +174,11 @@ const AdminDashboard: React.FC = () => {
                 <span className="font-black uppercase tracking-wider text-sm">Sign In to Dashboard</span>
               )}
             </button>
+            <div className="mt-6 text-center text-xs text-slate-500">
+              <span className="block font-semibold mb-1">Demo Admin Credentials</span>
+              <span>Email: <span className="font-mono">admin@voiceofhope.com</span></span><br />
+              <span>Password: <span className="font-mono">admin123</span></span>
+            </div>
           </form>
         </motion.div>
       </div>
