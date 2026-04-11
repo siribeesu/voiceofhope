@@ -55,5 +55,5 @@ The project includes `firestore.rules` and `storage.rules` at the root. You can 
 - **Firestore**: Allows public creation of complaints and restricted admin access.
 - **Storage**: Limits evidence uploads to 10MB and specific formats (Audio, Video, Images, Docs).
 
-## Live Demo
-[Voice of Hope - Live](https://68b24395f002a9e3bfbf6094--voice-of-hope.netlify.app/)
+## Live Platform
+[Voice of Hope - Live on Vercel](https://voiceofhope-n8al.vercel.app/)

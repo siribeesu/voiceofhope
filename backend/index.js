@@ -37,15 +37,19 @@ if (!serviceAccount) {
     }
 }
 
+let db;
 if (serviceAccount) {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
+    try {
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+        });
+        db = admin.firestore();
+    } catch (err) {
+        console.error('Firebase initialization error:', err);
+    }
 } else {
     console.error('CRITICAL: Firebase could not be initialized. Missing credentials.');
 }
-
-const db = admin.firestore();
 
 // Middleware to verify Firebase ID Token
 const verifyToken = async (req, res, next) => {
