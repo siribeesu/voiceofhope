@@ -110,6 +110,10 @@ const generateComplaintId = () => {
 // Submit Complaint
 app.post('/api/complaints', async (req, res) => {
     try {
+        if (!db) {
+            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected. Admin needs to add FIREBASE_SERVICE_ACCOUNT credentials.' });
+        }
+
         const complaintData = req.body;
         console.log('Received complaint submission:', complaintData);
 
@@ -142,6 +146,10 @@ app.post('/api/complaints', async (req, res) => {
 // Get Complaint by Tracking ID
 app.get('/api/complaints/track/:trackingId', async (req, res) => {
     try {
+        if (!db) {
+            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected.' });
+        }
+        
         const { trackingId } = req.params;
         const snapshot = await db.collection('complaints').where('complaintId', '==', trackingId).get();
 
