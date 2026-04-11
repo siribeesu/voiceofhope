@@ -16,6 +16,11 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+// Check for placeholders
+if (firebaseConfig.apiKey === 'your_api_key' || !firebaseConfig.apiKey) {
+  console.error("FIREBASE ERROR: You are using placeholders in your .env file. Please replace 'your_api_key' and other fields with actual values from the Firebase Console.");
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);

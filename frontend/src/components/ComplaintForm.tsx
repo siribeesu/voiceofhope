@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { AlertCircle, CheckCircle, User, Mail, FileText, Upload, Film, X, Mic, MicOff, Download, FileCheck } from 'lucide-react';
+import { AlertCircle, CheckCircle, User, Mail, FileText, Upload, Film, X, Mic, MicOff, Download, FileCheck, Music, File as FileIcon, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/firebase';
@@ -393,9 +393,12 @@ const ComplaintForm: React.FC = () => {
             {/* Multi-File Evidence Upload */}
             <div className="space-y-4 pt-4">
               <div className="flex items-center justify-between ml-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Evidence Materials
-                </label>
+                <div className="flex flex-col">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    Evidence Materials
+                  </label>
+                  <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Audio, Video, Images, & Documents Supported</span>
+                </div>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{evidenceFiles.length} / 5 Files</span>
               </div>
 
@@ -411,10 +414,23 @@ const ComplaintForm: React.FC = () => {
                     >
                       {preview.type.startsWith('image/') ? (
                         <img src={preview.url} alt="Preview" className="w-full h-full object-cover" />
+                      ) : preview.type.startsWith('video/') ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-blue-50">
+                          <Film className="h-6 w-6 text-blue-500 mb-1" />
+                          <p className="text-[8px] font-black text-blue-800 uppercase tracking-tighter truncate w-full px-1">Video</p>
+                          <p className="text-[7px] font-bold text-blue-400 truncate w-full px-1">{preview.name}</p>
+                        </div>
+                      ) : preview.type.startsWith('audio/') ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-amber-50">
+                          <Music className="h-6 w-6 text-amber-500 mb-1" />
+                          <p className="text-[8px] font-black text-amber-800 uppercase tracking-tighter truncate w-full px-1">Audio</p>
+                          <p className="text-[7px] font-bold text-amber-400 truncate w-full px-1">{preview.name}</p>
+                        </div>
                       ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center">
-                          <Film className="h-6 w-6 text-teal-500 mb-1" />
-                          <p className="text-[8px] font-bold text-slate-600 truncate w-full px-1">{preview.name}</p>
+                        <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-indigo-50">
+                          <FileIcon className="h-6 w-6 text-indigo-500 mb-1" />
+                          <p className="text-[8px] font-black text-indigo-800 uppercase tracking-tighter truncate w-full px-1">Document</p>
+                          <p className="text-[7px] font-bold text-indigo-400 truncate w-full px-1">{preview.name}</p>
                         </div>
                       )}
                       <button
@@ -442,7 +458,7 @@ const ComplaintForm: React.FC = () => {
               <input
                 type="file"
                 multiple
-                accept="image/*,video/*"
+                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
                 className="hidden"
                 ref={fileInputRef}
                 onChange={handleFileChange}

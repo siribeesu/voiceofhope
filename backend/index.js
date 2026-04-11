@@ -13,14 +13,37 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Initialize Firebase Admin
-// Note: You should download your service account key from Firebase Console
-// and place it in the backend folder as 'serviceAccountKey.json'
-// or set the GOOGLE_APPLICATION_CREDENTIALS environment variable.
-const serviceAccount = require('./serviceAccountKey.json');
+let serviceAccount;
+const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
+if (serviceAccountEnv) {
+    try {
+        serviceAccount = JSON.parse(serviceAccountEnv);
+    } catch (err) {
+        // If not valid JSON, maybe it's Base64?
+        try {
+            serviceAccount = JSON.parse(Buffer.from(serviceAccountEnv, 'base64').toString());
+        } catch (b64Err) {
+            console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable');
+        }
+    }
+}
+
+if (!serviceAccount) {
+    try {
+        serviceAccount = require('./serviceAccountKey.json');
+    } catch (err) {
+        console.warn('Warning: serviceAccountKey.json not found. Database features will fail if FIREBASE_SERVICE_ACCOUNT is not set.');
+    }
+}
+
+if (serviceAccount) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+} else {
+    console.error('CRITICAL: Firebase could not be initialized. Missing credentials.');
+}
 
 const db = admin.firestore();
 
@@ -64,7 +87,7 @@ const isRubbishText = (text) => {
     if (trimmed.length > 20 && !trimmed.includes(' ')) return true;
 
     // 5. Check for "rubbish" keywords
-    const wasteWords = ['rubbish', 'waste', 'nothing', 'nonsense', 'test text', 'sample text'];
+    const wasteWords = ['rubbish', 'waste', 'nothing', 'nonsense', 'test text', 'sample text', 'testing', 'hello world', 'asdfghjkl', 'bla bla bla'];
     if (wasteWords.some(word => trimmed.toLowerCase() === word)) return true;
 
     return false;
@@ -91,7 +114,7 @@ app.post('/api/complaints', async (req, res) => {
             console.log('Rubbish detected in description:', complaintData.description);
             return res.status(400).json({
                 success: false,
-                error: 'AI Analysis detected that you entered something waste. Please provide a clear and meaningful description of your complaint.'
+                error: 'AI Analysis detected an inappropriate or nonsense written message. Please provide a clear and meaningful description of your case.'
             });
         }
 
@@ -224,6 +247,10 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;

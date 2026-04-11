@@ -1,0 +1,16 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /evidence/{allPaths=**} {
+      allow write: if request.resource.size < 10 * 1024 * 1024 // Max 10MB
+                   && (request.resource.contentType.startsWith('image/')
+                       || request.resource.contentType.startsWith('video/')
+                       || request.resource.contentType.startsWith('audio/')
+                       || request.resource.contentType == 'application/pdf'
+                       || request.resource.contentType == 'text/plain'
+                       || request.resource.contentType == 'application/msword'
+                       || request.resource.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      allow read: if true; // In a real app, you might want to restrict this to admins
+    }
+  }
+}

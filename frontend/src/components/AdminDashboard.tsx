@@ -20,7 +20,10 @@ import {
   Search,
   ChevronRight,
   User,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Music,
+  Film,
+  FileCheck
 } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
@@ -386,32 +389,63 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
 
-                  {selectedComplaint.evidenceUrl && (
-                    <div>
+                  {(selectedComplaint.evidenceUrls && selectedComplaint.evidenceUrls.length > 0) || selectedComplaint.evidenceUrl ? (
+                    <div className="space-y-4">
                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Evidence Portfolio</span>
-                      <div className="mt-3 bg-teal-50 p-6 rounded-3xl border border-teal-100 flex items-center justify-between group overflow-hidden relative">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                        <div className="flex items-center space-x-4">
-                          <div className="p-3 bg-white rounded-2xl shadow-sm">
-                            <ImageIcon className="h-6 w-6 text-teal-600" />
-                          </div>
-                          <div>
-                            <p className="font-black text-teal-900">Multimedia Attachment</p>
-                            <p className="text-xs font-bold text-teal-700/60 uppercase tracking-widest">Secure External Resource</p>
-                          </div>
-                        </div>
-                        <a
-                          href={selectedComplaint.evidenceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="button-primary !py-3 !px-6 !rounded-2xl !text-xs !bg-teal-600 hover:!bg-teal-700 flex items-center space-x-2 relative z-10"
-                        >
-                          <Eye className="h-4 w-4" />
-                          <span>Review Material</span>
-                        </a>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {[
+                          ...(selectedComplaint.evidenceUrls || []),
+                          ...(selectedComplaint.evidenceUrl ? [selectedComplaint.evidenceUrl] : [])
+                        ].map((url, index) => {
+                          const isImage = url.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)/);
+                          const isVideo = url.toLowerCase().match(/\.(mp4|webm|ogg|mov)/);
+                          const isAudio = url.toLowerCase().match(/\.(mp3|wav|ogg)/);
+                          const isPdf = url.toLowerCase().match(/\.pdf/);
+
+                          return (
+                            <div key={index} className={`p-5 rounded-3xl border flex items-center justify-between group relative overflow-hidden transition-all hover:shadow-lg ${
+                              isImage ? 'bg-teal-50 border-teal-100' :
+                              isVideo ? 'bg-blue-50 border-blue-100' :
+                              isAudio ? 'bg-amber-50 border-amber-100' : 'bg-indigo-50 border-indigo-100'
+                            }`}>
+                              <div className="flex items-center space-x-4 relative z-10">
+                                <div className="p-3 bg-white rounded-2xl shadow-sm">
+                                  {isImage ? <ImageIcon className="h-5 w-5 text-teal-600" /> :
+                                   isVideo ? <Film className="h-5 w-5 text-blue-600" /> :
+                                   isAudio ? <Music className="h-5 w-5 text-amber-600" /> :
+                                   <FileText className="h-5 w-5 text-indigo-600" />}
+                                </div>
+                                <div className="overflow-hidden">
+                                  <p className={`font-black text-xs uppercase tracking-tight truncate ${
+                                    isImage ? 'text-teal-900' :
+                                    isVideo ? 'text-blue-900' :
+                                    isAudio ? 'text-amber-900' : 'text-indigo-900'
+                                  }`}>
+                                    {isImage ? 'Image Attachment' :
+                                     isVideo ? 'Video Evidence' :
+                                     isAudio ? 'Audio Recording' : 'Document Evidence'}
+                                  </p>
+                                  <p className="text-[10px] font-bold opacity-40 truncate">Resource Attachment #{index + 1}</p>
+                                </div>
+                              </div>
+                              <a
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`p-3 rounded-xl text-white transition-all transform hover:scale-110 active:scale-95 relative z-10 ${
+                                  isImage ? 'bg-teal-600 hover:bg-teal-700' :
+                                  isVideo ? 'bg-blue-600 hover:bg-blue-700' :
+                                  isAudio ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'
+                                }`}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </a>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  )}
+                  ) : null}
 
                   <div className="space-y-8 pt-8 border-t border-slate-100">
                     <div className="space-y-3">
