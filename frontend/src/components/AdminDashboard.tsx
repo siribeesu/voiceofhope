@@ -60,8 +60,9 @@ const AdminDashboard: React.FC = () => {
       ]);
       setComplaints(complaintsData);
       setFeedback(feedbackData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading data:', error);
+      alert(`Dashboard failed to load data: ${error.message}. Please check console or backend logs.`);
     }
   };
 

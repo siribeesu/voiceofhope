@@ -182,8 +182,9 @@ app.use('/api/admin', verifyToken);
 app.get('/api/admin/complaints', async (req, res) => {
     try {
         if (!db) {
-            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected.' });
+            return res.status(500).json({ success: false, error: 'Database not configured.' });
         }
+        
         const snapshot = await db.collection('complaints').orderBy('createdAt', 'desc').get();
         const complaints = snapshot.docs.map(doc => {
             const data = doc.data();
@@ -204,9 +205,6 @@ app.get('/api/admin/complaints', async (req, res) => {
 // Admin: Update complaint status
 app.patch('/api/admin/complaints/:id', async (req, res) => {
     try {
-        if (!db) {
-            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected.' });
-        }
         const { id } = req.params;
         const { status, adminNotes, resolution } = req.body;
 
@@ -227,9 +225,6 @@ app.patch('/api/admin/complaints/:id', async (req, res) => {
 // Submit Feedback
 app.post('/api/feedback', async (req, res) => {
     try {
-        if (!db) {
-            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected.' });
-        }
         const feedbackData = req.body;
         await db.collection('feedback').add({
             ...feedbackData,
@@ -245,9 +240,6 @@ app.post('/api/feedback', async (req, res) => {
 // Admin: Get all feedback
 app.get('/api/admin/feedback', async (req, res) => {
     try {
-        if (!db) {
-            return res.status(500).json({ success: false, error: 'Server Configuration Error: Firebase Database is not connected.' });
-        }
         const snapshot = await db.collection('feedback').orderBy('createdAt', 'desc').get();
         const feedback = snapshot.docs.map(doc => {
             const data = doc.data();
