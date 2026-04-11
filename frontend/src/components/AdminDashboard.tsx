@@ -38,6 +38,7 @@ const AdminDashboard: React.FC = () => {
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
   const [resolution, setResolution] = useState('');
+  const [activeTab, setActiveTab] = useState<'complaints' | 'feedback'>('complaints');
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -246,11 +247,36 @@ const AdminDashboard: React.FC = () => {
           ))}
         </div>
 
+        {/* View Toggle */}
+        <div className="flex space-x-4 mb-6 relative z-10">
+          <button
+            onClick={() => setActiveTab('complaints')}
+            className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
+              activeTab === 'complaints'
+                ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/10'
+                : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
+            }`}
+          >
+            Manage Complaints
+          </button>
+          <button
+            onClick={() => setActiveTab('feedback')}
+            className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
+              activeTab === 'feedback'
+                ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20'
+                : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
+            }`}
+          >
+            Review Feedback
+          </button>
+        </div>
+
         {/* Complaints Table */}
+        {activeTab === 'complaints' ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.1 }}
           className="premium-card overflow-hidden bg-white/70 backdrop-blur-sm"
         >
           <div className="p-8 border-b border-slate-100 flex justify-between items-center">
@@ -322,6 +348,52 @@ const AdminDashboard: React.FC = () => {
             </table>
           </div>
         </motion.div>
+        ) : (
+          /* Feedback Grid */
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {feedback.length > 0 ? feedback.map((fb) => (
+              <div key={fb.id} className="premium-card p-6 bg-white flex flex-col h-full border border-slate-100 hover:shadow-xl hover:shadow-indigo-500/5 transition-all">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                      fb.type === 'compliment' ? 'bg-emerald-100 text-emerald-700' :
+                      fb.type === 'concern' ? 'bg-amber-100 text-amber-700' :
+                      'bg-indigo-100 text-indigo-700'
+                    }`}>
+                      {fb.type}
+                    </span>
+                    <p className="text-xs font-bold text-slate-400 mt-2">{fb.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                  </div>
+                  {fb.rating && (
+                    <div className="flex items-center space-x-1 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                      <span className="text-sm font-black text-amber-600">{fb.rating}/5</span>
+                    </div>
+                  )}
+                </div>
+                
+                <p className="text-sm font-bold text-slate-600 capitalize mb-2">{fb.category.replace('_', ' ')}</p>
+                <div className="text-slate-800 text-sm font-medium italic bg-slate-50 p-4 rounded-2xl flex-grow border border-slate-100 mb-4">
+                  "{fb.message}"
+                </div>
+                
+                <div className="mt-auto flex items-center space-x-2 text-xs font-bold text-slate-400">
+                  <User className="h-4 w-4" />
+                  <span>{fb.isAnonymous ? 'Anonymous Reviewer' : (fb.patientName || 'Unknown User')}</span>
+                </div>
+              </div>
+            )) : (
+              <div className="col-span-1 sm:col-span-2 lg:col-span-3 premium-card py-20 text-center flex flex-col items-center">
+                <MessageSquare className="h-12 w-12 text-slate-200 mb-4" />
+                <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px]">No feedback submitted yet</p>
+              </div>
+            )}
+          </motion.div>
+        )}
 
         <AnimatePresence>
           {selectedComplaint && (
